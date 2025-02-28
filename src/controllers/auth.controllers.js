@@ -6,6 +6,8 @@ export const register = async (req, res) => {
   const { email, password, username } = req.body;
 
   try {
+    //queda pendiente validar que el usuario y contraseña existan
+
     const passwordHash = await bcript.hash(password, 10); //encripta la contraseña
 
     const newUser = new User({
