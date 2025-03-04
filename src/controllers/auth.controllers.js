@@ -11,7 +11,7 @@ export const register = async (req, res) => {
 
     const usernameFound = await User.findOne({username}); //busca el usuario por el nombre de usuario
     if (usernameFound) return res.status(400).json(["The username is already in use"]); //si el nombre de usuario ya esta en uso devuelve un mensaje de error
-
+    
     const passwordHash = await bcript.hash(password, 10); //encripta la contraseña
 
     const newUser = new User({
@@ -43,10 +43,10 @@ export const login = async (req, res) => {
 
   try {
     const userFound = await User.findOne({ email: email }); //busca el usuario por el correo
-    if (!userFound) return res.status(400).json({ message: "User not found" }); //si no encuentra el usuario devuelve un mensaje de error
+    if (!userFound) return res.status(400).json(["User not found"]); //si no encuentra el usuario devuelve un mensaje de error
 
     const isMatch = await bcript.compare(password, userFound.password); //compara la contraseña encriptada
-    if (!isMatch) return res.status(400).json({ message: "Invalid password" }); //si la contraseña no coincide devuelve un mensaje de error
+    if (!isMatch) return res.status(400).json(["Invalid password"]); //si la contraseña no coincide devuelve un mensaje de error
 
     const token = await createAccessToken({ id: userFound._id }); //crea el token de acceso
     res.cookie("token", token); //guarda el token en una cookie
