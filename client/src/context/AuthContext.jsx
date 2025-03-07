@@ -39,9 +39,15 @@ export const AuthProvider = ({ children }) => {
             if (Array.isArray(error.response.data)) {
                 return setErrors(error.response.data);
             }
-            setErrors(error.response.data);
+            setErrors([error.response.data]);
         }
     }
+
+    const logout = () => {
+        Cookies.remove('token');
+        setIsAuthenticated(false);
+        setUser(null);
+    };
 
     useEffect(() => {
         if (errors.length > 0) {
@@ -53,7 +59,7 @@ export const AuthProvider = ({ children }) => {
     });
 
     useEffect(() => {
-        async function checkLogin() {       
+        async function checkLogin() {
             const cookies = Cookies.get();      // obtiene las cookies
 
             if (!cookies.token) {           // si no hay token en las cookies
@@ -72,7 +78,7 @@ export const AuthProvider = ({ children }) => {
                 setIsAuthenticated(true);       // esta autenticado
                 setUser(res.data);              // hay usuario
                 setLoading(false);              // no esta cargando
-            }     
+            }
             catch (error) {             // si hay error
                 setIsAuthenticated(false);   // no esta autenticado
                 setUser(null);               // no hay usuario
@@ -80,12 +86,13 @@ export const AuthProvider = ({ children }) => {
             }
         }
         checkLogin();       // llama a la funcion
-    }, []);         
+    }, []);
 
     return (
         <AuthContext.Provider value={{
             signup,
             signin,
+            logout,
             loading,
             user,
             isAuthenticated,
